@@ -17,9 +17,8 @@ ActiveRecord::Schema.define(version: 20200505172934) do
   end
 
   create_table "buyers", force: :cascade do |t|
-    t.float   "budget"
-    t.string  "name"
-    t.integer "agent_id"
+    t.float  "budget"
+    t.string "name"
   end
 
   create_table "house_visits", force: :cascade do |t|
