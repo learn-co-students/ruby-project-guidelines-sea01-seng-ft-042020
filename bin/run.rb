@@ -1,5 +1,6 @@
-def greet
-    puts 'Welcome to MovieBook!'
-end
+require './config/environment'
 
-greet
+cli = CommandLineInterface.new
+cli.greet
+cli.greet_2
+cli.user_input_1
