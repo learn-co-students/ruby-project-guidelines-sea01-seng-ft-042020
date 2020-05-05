@@ -9,17 +9,23 @@ HouseVisit.destroy_all
     })
 end
 
-300.times do
+50.times do
     Buyer.create({
         name: Faker::FunnyName.three_word_name,
-        agent_id: (rand(10) + 1),
         budget: (100000 + rand(500000) + rand(100) / 100.0),
     })
 end
 
 100.times do
-    Buyer.create({
+    House.create({
         agent_id: (rand(10) + 1),
         price: (100000 + rand(600000) + rand(100) / 100.0),
     })
+end
+
+Buyer.all.each do |buyer|
+    visits = rand(2) + 1
+    visits.times do 
+        
+    end
 end
