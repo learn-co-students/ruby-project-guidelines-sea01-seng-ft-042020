@@ -37,9 +37,30 @@ class CommandLineInterface
         end
         puts search_list
         puts "Pick your movie by typing its number!"
-        
-
     end
+
+
+    # output the movie the user has searched for
+
+    # # CREATE
+    # create user account
+    # create review/leave rating connected to user instance and movie instance
+
+    # # READ
+    # find a movie
+    # find other reviews
+
+    # # UPDATE
+    # update user review 
+    # update user name
+
+    # # DESTROY
+    # delete account
+    # delete review
+
+
+
+
 
 
 end

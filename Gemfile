@@ -7,5 +7,6 @@ gem "sqlite3"
 gem "pry"
 gem "require_all"
 gem "faker"
+gem 'dotenv'
 
 gem "rest-client", "~> 2.1"
