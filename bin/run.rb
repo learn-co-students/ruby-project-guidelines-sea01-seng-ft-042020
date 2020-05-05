@@ -1,6 +1,37 @@
 require './config/environment'
 
+#creates new instance of CommandLineInterface
 cli = CommandLineInterface.new
+
+#Welcomes user to MovieBook
 cli.greet
-cli.greet_2
-cli.user_input_1
+
+#Prompts user to find or create their account
+puts "Enter your name to find your account or create a new one!"
+user_input = gets.strip
+current_user = cli.user_account
+
+#Prompts user to find movie in database
+puts "What movie are you looking for?"
+user_input = gets.strip
+current_movie = cli.find_movie
+
+#Prompts user to choose between reading or writing a review
+cli.review_prompt
+user_input = gets.chomp.to_i
+
+if user_input == 1
+    puts "Write your review"
+    write_up = gets.chomp
+    puts "Now rate this movie from 1 to 5"
+    rating = gets.chomp.to_i.clamp(1, 5)
+    cli.write_review
+elsif user_input == 2
+    cli.read_reviews
+end
+
+
+
+# Movie.search_movie_database("Spiderman")
+# binding.pry
+
