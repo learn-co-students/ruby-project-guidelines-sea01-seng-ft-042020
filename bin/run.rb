@@ -1,5 +1,5 @@
-require_relative '../config/environment'
+def greet
+    puts 'Welcome to MovieBook!'
+end
 
-
-
-puts "HELLO WORLD"
+greet
