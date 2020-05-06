@@ -53,8 +53,7 @@ end
 def houses_agent(budget)
     house = houses(budget)
     agent = house.map {|house| house.agent.name}.uniq
-    # binding.pry
-    agent
+    agent.each {|agent| puts agent}
 end
 
 def help
