@@ -58,11 +58,18 @@ class CommandLineInterface
         puts "\n"
     end
     
-    def update_account
-        user = User.find_by(name: @user)
+    def update_account(user_name)
+        #Finds current instance of user
+        user = User.find_user(user_name)
+
+        #prompts user for new name and stores in variable
         puts "Enter your new name:"
         user_input = gets.strip
-        user.update(name: user_input)
+
+        #puts in new name and stores in current user instance
+        User.change_name(user, user_input)
+
+        #tells user name change successful
         puts "Your name has been changed to: #{user_input}"
     end
 

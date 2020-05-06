@@ -7,9 +7,11 @@ cli = CommandLineInterface.new
 cli.greet
 
 #User account prompt - prompts user to find or create their account
-puts "Enter your name to find your account or create a new one!"
-user_input = gets.strip
-cli.user = cli.user_account(user_input)
+def account_prompt
+    puts "Enter your name to find your account or create a new one!"
+    user_input = gets.strip
+    cli.user = cli.user_account(user_input)
+end
 
 #Gives user list of options
 def user_options(cli)
@@ -60,11 +62,21 @@ def user_options(cli)
             case user_input
                 when 1
                     #update account
-                    cli.update_account
+                    cli.update_account(cli.user.name)
+                    user_options(cli)
                 when 2
                     #delete account
+                    user = User.find_user(cli.user.name)
+                    user.destroy
+                    puts "Account successfully deleted!"
+                    
                 when 3
                     #update a review
+                    reviews = cli.user.find_reviews
+                    puts "Please select a review"
+                    user_input = gets.chomp.to_i
+                    selected_review = reviews[(user_input)-1]
+                    
                 when 4
                     #delete a review
                 when 5 
@@ -77,6 +89,7 @@ def user_options(cli)
     end
 end
 
+account_prompt
 user_options(cli)
 
 # binding.pry
