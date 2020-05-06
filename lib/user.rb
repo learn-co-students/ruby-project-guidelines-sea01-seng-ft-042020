@@ -17,6 +17,11 @@ def interactions(user_instance)
         list_houses
     elsif interaction == "Help"
         help
+        interactions(user_instance)
+    elsif interaction == "Buy House"
+        buy_house
+    elsif interaction == "Visit House"
+        visit_house(user_instance)
     elsif interaction == "Exit"
         puts "Have a nice day!"
     else
@@ -31,20 +36,22 @@ def help
     puts "List Available Houses"
 end
 
-def visit_house
+def visit_house(user_instance)
     puts "What house would you like to visit"
     house_id = gets.strip
     house_visit = HouseVisit.new({house_id: house_id, buyer_id: user_instance.id})
     house_visit.save
 
-    puts "This house costs $#{house_visit.price}."
+    puts "This house costs $#{house_visit.house.price}."
 end
 
 def list_houses
     puts House.all
 end
 
-def buy_house(house_id)
+def buy_house
+    puts "Which house would you like to buy?"
+    house_id = gets.strip
     house = House.find_by(id: house_id)
     HouseVisit.find_by(house_id: house_id).delete
     house.delete
@@ -62,6 +69,8 @@ def valid?(username)
         true
     end
 end
+
+
 
 
 def delete_buyer
