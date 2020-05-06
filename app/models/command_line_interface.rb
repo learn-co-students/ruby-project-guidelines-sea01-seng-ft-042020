@@ -32,18 +32,24 @@ class CommandLineInterface
     end
 
     def write_review(write_up, rating)
-        Review.create(user_id: @user[:id], movie_id: @movie[:id], write_up: write_up, rating: rating)
-        puts @movie[:title]
-        puts "#{rating}"
-        puts "#{write_up}"
+        review = Review.create(user_id: @user[:id], movie_id: @movie[:id], write_up: write_up, rating: rating)
+        puts "#{@movie[:title]} --- #{rating}/5 --- #{write_up}"
+        @user.reviews << review
     end
 
     def read_reviews
+        puts "\n"
+        puts "\n"
+        puts "\n"
         puts @movie[:title]
+        puts "\n"
         Review.where(movie_id: @movie[:id]).map do |review|
-            puts review[:rating]
-            puts review[:write_up]
+            puts "#{review[:rating]} --- #{review[:write_up]}"
         end
+    end
+
+    def update_review(review, rating, write_up)
+        review.update(rating: rating, write_up: write_up)
     end
 
  
@@ -61,20 +67,29 @@ class CommandLineInterface
     def update_account(user_name)
         #Finds current instance of user
         user = User.find_user(user_name)
-
+        puts "\n"
+        puts "\n"
+        puts "\n"
         #prompts user for new name and stores in variable
         puts "Enter your new name:"
         user_input = gets.strip
 
         #puts in new name and stores in current user instance
         User.change_name(user, user_input)
+        puts "\n"
+        puts "\n"
+        puts "\n"
 
         #tells user name change successful
         puts "Your name has been changed to: #{user_input}"
     end
 
 
-
+    def space
+        puts "\n"
+        puts "\n"
+        puts "\n"
+    end
 
 
 

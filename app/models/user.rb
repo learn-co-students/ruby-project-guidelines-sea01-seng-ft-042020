@@ -11,8 +11,9 @@ class User < ActiveRecord::Base
     def find_reviews
         reviews = Review.where(user_id: self.id)
         reviews.map do |review|
-           puts "#{(reviews.index(review)) + 1}. #{review.movie}"
+           puts "#{(reviews.index(review)) + 1}. #{review.movie.title} --- #{review.rating} --- #{review.write_up}"
         end
+        reviews
     end
 
     def self.find_user(name)
