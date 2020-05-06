@@ -42,14 +42,16 @@ class CommandLineInterface
         Review.where(movie_id: current_movie[:id])
     end
 
-    def user_input_1
+ 
+    def list_user_options
+        puts "Please select from the following"
         puts "\n"
+        puts "1. Movies"
         puts "\n"
-        puts "Search for a movie:"
-        movie = gets.strip
-        # puts movie
-        puts search_list
-        puts "Pick your movie by typing its number!"
+        puts "2. Reviews"
+        puts "\n"
+        puts "3. User Settings"
+        puts "\n"
     end
     
     

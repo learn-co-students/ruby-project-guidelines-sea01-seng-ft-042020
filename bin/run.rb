@@ -11,6 +11,11 @@ puts "Enter your name to find your account or create a new one!"
 user_input = gets.strip
 cli.user = cli.user_account(user_input)
 
+#Gives user list of options
+cli.list_user_options
+
+
+
 #Prompts user to find movie in database
 puts "What movie are you looking for?"
 user_input = gets.strip

@@ -12,7 +12,7 @@ class Movie < ActiveRecord::Base
         end
         puts search_list
         puts "See anything you like? Input the number of the movie you want to view."
-        user_input = gets.chomp.to_i
+        user_input = gets.chomp.to_i.clamp(0, 30)
         movie_choice = search_results[(user_input)-1]
         Movie.find_or_create_by(title: movie_choice[:title])
     end
