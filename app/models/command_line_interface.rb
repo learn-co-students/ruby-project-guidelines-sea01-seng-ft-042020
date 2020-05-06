@@ -39,22 +39,32 @@ class CommandLineInterface
     end
 
     def read_reviews
-        Review.where(movie_id: current_movie[:id])
+        puts @movie[:title]
+        Review.where(movie_id: @movie[:id]).map do |review|
+            puts review[:rating]
+            puts review[:write_up]
+        end
     end
 
  
     def list_user_options
         puts "Please select from the following"
         puts "\n"
-        puts "1. Movies"
+        puts "1. Movies: info, reviews"
         puts "\n"
-        puts "2. Reviews"
+        puts "2. User Settings"
         puts "\n"
-        puts "3. User Settings"
+        puts "3. Exit"
         puts "\n"
     end
     
-    
+    def update_account
+        user = User.find_by(name: @user)
+        puts "Enter your new name:"
+        user_input = gets.strip
+        user.update(name: user_input)
+        puts "Your name has been changed to: #{user_input}"
+    end
 
 
 
