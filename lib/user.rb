@@ -15,6 +15,8 @@ def interactions(user_instance)
     interaction = gets.strip
     if interaction == "List Available Houses"
         list_houses
+    elsif interaction == "Agent"
+        agents(user_instance)
     elsif interaction == "Help"
         help
         interactions(user_instance)
@@ -27,6 +29,32 @@ def interactions(user_instance)
     else
         interactions(user_instance)
     end
+end
+
+def agents(user_instance)
+    budget = user_instance.budget
+    if budget == 0
+        puts "What is your budget?"
+        budget = gets.strip
+    end
+    #list the agents who match that budget
+    houses_agent(budget)
+    puts "Which agent do you want to choose?"
+    angent_name = gets.strip
+
+    puts "Visting house list:"
+    list_houses(angent_name)
+end
+
+def houses(budget)
+    house = House.where("price <= #{budget}").order("price DESC")
+end
+
+def houses_agent(budget)
+    house = houses(budget)
+    agent = house.map {|house| house.agent.name}.uniq
+    # binding.pry
+    agent
 end
 
 def help
