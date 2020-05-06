@@ -37,10 +37,10 @@ def agents(user_instance)
     #list the agents who match that budget
     houses_agent(budget)
     puts "Which agent do you want to choose?"
-    angent_name = gets.strip
+    agent_name = gets.strip
 
     puts "Visting house list:"
-    list_houses(angent_name)
+    agent_list_houses(agent_name)
 end
 
 def houses(budget)
@@ -50,8 +50,13 @@ end
 def houses_agent(budget)
     house = houses(budget)
     agent = house.map {|house| house.agent.name}.uniq
-    # binding.pry
-    agent
+    agent.each {|agent| puts agent}
+end
+
+def agent_list_houses(agent_name)
+    house = House.all.select {|house| house.agent.name == agent_name}
+    house.each {|house| puts "house"}
+    #binding.pry
 end
 
 def help
