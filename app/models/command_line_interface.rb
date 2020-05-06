@@ -1,5 +1,5 @@
 class CommandLineInterface
-
+    attr_accessor :user, :movie
     def initialize
 
     end
@@ -16,15 +16,13 @@ class CommandLineInterface
         puts "\n"
     end
 
-    def user_account
-        current_user = self.find_or_create_user_account(user_input)
-        current_user
+    def user_account(answer)
+        # self.find_or_create_user_account(answer)
+        User.find_or_create_by(name: answer)
     end
 
-    def find_movie
-        puts "What movie are you looking for?"
-        user_input = gets.strip
-        Movie.search_movie_database(user_input)
+    def find_movie(answer)
+        Movie.search_movie_database(answer)
     end
 
     def review_prompt
@@ -33,8 +31,11 @@ class CommandLineInterface
         puts "2. Read" 
     end
 
-    def write_review
-        Review.create(user_id: current_user[:id], movie_id: current_movie[:id], write_up: write_up, rating: rating)
+    def write_review(write_up, rating)
+        Review.create(user_id: @user[:id], movie_id: @movie[:id], write_up: write_up, rating: rating)
+        puts @movie[:title]
+        puts "#{rating}"
+        puts "#{write_up}"
     end
 
     def read_reviews
