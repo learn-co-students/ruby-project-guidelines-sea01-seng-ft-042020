@@ -23,24 +23,34 @@ class CommandLineInterface
 
 
     # Movie functions
-        def find_movie(answer)
-            Movie.search_movie_database(answer)
+        def find_movie(user_input)
+            Movie.search_movie_database(user_input)
         end
 
         def movie_menu(cli)
             #Prompts user to find movie in database
-            system("clear")
             puts "What movie are you looking for?"
             user_input = gets.strip
+            if user_input == ""
+                system("clear")
+                puts "Please enter a valid request."
+                puts "\n"
+                puts "Example: Cars 4"
+                puts "\n"
+                movie_menu(cli)
+            end
             cli.movie = cli.find_movie(user_input)
-
-            #output movie info: title, desc
-            puts cli.movie[:title]
-
-            #give option to write/read review, or go back to main_menu
+            if cli.movie == nil
+                puts "\n"
+                puts "Sorry, we couldn't find that one. Please try again."
+                puts "\n"
+                movie_menu(cli)
+            end
             system("clear")
+            # output movie info: title, desc
+            puts cli.movie[:title]
+            #give option to write/read review, or go back to main_menu
             cli.movie_options
-            user_input = gets.chomp.to_i
         end
 
         def write_review(write_up, rating)
@@ -63,6 +73,11 @@ class CommandLineInterface
         def movie_menu_write_review(cli)
             puts "Write your review:"
             write_up = gets.chomp
+            if write_up == ""
+                puts "Please...Say ANYTHING."
+                puts "\n"
+                movie_menu_write_review(cli)
+            end
             system("clear")
             puts "Now rate this movie from 1 to 5:"
             rating = gets.chomp.to_i.clamp(1, 5)

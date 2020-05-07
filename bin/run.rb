@@ -13,6 +13,10 @@ cli.greet
 def account_prompt(cli)
     puts "Enter your name to find your account or create a new one!"
     user_input = gets.strip
+    if user_input == ""
+        puts "Hmm, I didn't quite catch that. Please enter a valid name."
+        account_prompt(cli)
+    end
     cli.user = cli.user_account(user_input)
 end
 
@@ -24,7 +28,9 @@ def main_menu(cli)
 
     case user_input #Main Menu
         when 1 #Movie Menu
+            system("clear")
             cli.movie_menu(cli)
+            user_input = gets.chomp.to_i
             case user_input #Menu for selected movie
                 when 1 #write new review 
                     system("clear")
@@ -34,6 +40,7 @@ def main_menu(cli)
                     puts cli.movie_menu_read_reviews
                     main_menu(cli)
                 when 3 #exit to main menu
+                    system("clear")
                     main_menu(cli)
             end
         when 2 #User Settings Menu
@@ -59,6 +66,7 @@ def main_menu(cli)
                     cli.delete_review(cli)
                     main_menu(cli)
                 when 5 #return to main menu
+                    system("clear")
                     main_menu(cli)
             end
 
@@ -66,8 +74,12 @@ def main_menu(cli)
             system("clear")
             puts "Thanks for using MovieBook! Goodbye!"
             cli.space
-            
-    end
+        else
+            system("clear")
+            puts "Sorry, that isn't one of our options. Please select 1, 2, or 3."
+            cli.space
+            main_menu(cli)
+        end
 end
 
 account_prompt(cli)
