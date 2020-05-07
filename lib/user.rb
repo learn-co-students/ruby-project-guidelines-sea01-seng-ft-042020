@@ -184,9 +184,14 @@ end
 def change_budget(user_instance)
     puts "\nWhat would you like to change your budget to?"
     budget = gets.strip
-    if budget.to_f > 0
+    if budget.to_f > 0 and houses(budget.to_f)[0]
         user_instance.budget == budget.to_f
         interactions(user_instance)
+    elsif houses(budget.to_f)[0] == nil
+        puts "Your budget is to low for this market."
+        puts "Please change your budget to a higher value."
+        puts "The cheapest house costs #{House.all.map {|house| house.price}.min}"
+        change_budget(user_instance)
     else
         puts "You must give a dollar amount greater than $0.00."
         change_budget(user_instance)
