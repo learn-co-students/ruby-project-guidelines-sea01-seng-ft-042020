@@ -27,7 +27,7 @@ def interactions(user_instance)
     if interaction == "List Available Houses"
         list_houses(user_instance)
     elsif interaction == "Agent"
-        choose_agent(user_instance, interaction)
+        choose_agent(user_instance)
     elsif interaction == "Switch Agent"
         agents(user_instance)
     elsif interaction == "Help"
@@ -79,11 +79,14 @@ def agent_list_houses(agent_name)
     house.each {|house| puts "House ID: #{house.id}, House price: #{house.price}, Agent name: #{house.agent.name} "}
 end
 
-def choose_agent(user_instance, interaction)
-    if user_instance.houses.agent.values.include?(nil)
+def choose_agent(user_instance)
+    houses = user_instance.houses
+    agents = houses.map {|house| house.agent}
+    if agents.include?(nil)
         agents(user_instance)
     else
         puts "You already have an agent! Do you want to switch one?"
+        interaction = gets.strip
         if interaction == "No"
             interactions(user_instance)
         elsif interaction == "Switch"
