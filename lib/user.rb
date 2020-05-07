@@ -29,7 +29,7 @@ def interactions(user_instance)
     elsif interaction == "Agent"
         choose_agent(user_instance)
     elsif interaction == "Switch Agent"
-        agents(user_instance)
+        agents_valid_budget(user_instance)
     elsif interaction == "Help"
         help(user_instance)
     elsif interaction == "Change Budget"
@@ -51,14 +51,13 @@ def interactions(user_instance)
     end
 end
 
-def agents(user_instance)
-    budget = user_instance.budget
-    if budget == 0
-        puts "What is your budget?"
-        budget = gets.strip
-    end
-    #list the agents who match that budget
-    houses_agent(budget)
+# (1) list the agents who satisfy the budget
+# (2) choose an agent
+# (3) and vist the houses on the agent
+def list_agents(user_instance)
+    puts "Listing agents who satisfy your budege"
+    list_houses_agent(user_instance)
+
     puts "Which agent do you want to choose?"
     agent_name = gets.strip
 
@@ -68,12 +67,31 @@ def agents(user_instance)
     visit_house(user_instance)
 end
 
-def houses(budget)
-    house = House.where("price <= #{budget}").order("price DESC")
+# determine if the buyer has a valid budget
+def agents_valid_budget(user_instance)
+    budget = user_instance.budget
+    
+    if budget.to_f > House.all.map {|house| house.price}.min
+        puts "You budget is valid!"                
+        list_agents(user_instance)        
+    else 
+        puts "Your budget is to low for this market."
+        puts "Please change your budget to a higher value."
+        puts "The cheapest house costs #{House.all.map {|house| house.price}.min}"
+        puts "\nPlease change a valid budget to?"        
+        user_instance.budget = gets.strip
+        agents_valid_budget(user_instance)
+    end
 end
 
-def houses_agent(budget)
-    house = houses(budget)
+# list the houses which satisfy the buyer budget
+def list_houses_for_user(user_instance)
+    house_list = House.where("price <= #{user_instance.budget}").order("price DESC")    
+end
+
+# list the agents which satisfy the buyer budget
+def list_houses_agent(user_instance)
+    house = list_houses_for_user(user_instance)
     agent = house.map {|house| house.agent.name}.uniq
     agent.each {|agent| puts agent}
 end
@@ -84,17 +102,18 @@ def agent_list_houses(agent_name)
 end
 
 def choose_agent(user_instance)
+    puts "We are going to choose an agent:"
     houses = user_instance.houses
-    agents = houses.map {|house| house.agent}
-    if agents.include?(nil)
-        agents(user_instance)
+    agents_arr = houses.map {|house| house.agent}
+    if agents_arr.empty?
+        agents_valid_budget(user_instance)
     else
         puts "You already have an agent! Do you want to switch one?"
         interaction = gets.strip
         if interaction == "No"
             interactions(user_instance)
         elsif interaction == "Switch"
-            agents(user_instance)
+            agents_valid_budget(user_instance)
         end
     end
 end
@@ -128,11 +147,6 @@ def visit_house(user_instance)
         puts "Please try again."
         visit_house(user_instance)
     end
-end
-
-def list_houses(user_instance)
-    House.all.each {|house| puts "House ID: #{house.id}, House Price: #{house.price}, House Agent: #{house.agent.name}"}
-    interactions(user_instance)
 end
 
 def buy_house(user_instance)
