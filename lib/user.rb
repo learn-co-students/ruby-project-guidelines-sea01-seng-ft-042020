@@ -1,14 +1,18 @@
 def open_app
     puts "\nWelcome to Find Your House."
-    puts "If you already have an account please say Log In."
-    puts "Otherwise say Create User."
+    puts "If you already have an account please say 'Log In'."
+    puts "Otherwise say 'Create User' or 'Exit'."
     user_input = gets.strip
     if user_input == "Log In"
         user_instance = login
-        interactions(user_instance)
+        if user_instance.instance_of? Buyer
+            interactions(user_instance)
+        end
     elsif user_input == "Create User"
         user_instance = create_buyer
-        interactions(user_instance)
+        if user_instance.instance_of? Buyer
+            interactions(user_instance)
+        end
     elsif user_input == "Exit"
     else
         puts "Please say 'Log In' or 'Create User' or 'Exit'"
@@ -192,7 +196,7 @@ def login
     elsif user_name == "Exit"
     else
         puts "Sorry we could not find this account."
-        puts "If you dont know then type 'Create User' or 'Exit'"
+        puts "If you dont know your username then type 'Create User' or 'Exit'"
         login
     end
 end
