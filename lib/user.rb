@@ -36,8 +36,12 @@ def interactions(user_instance)
         buy_house(user_instance)
     elsif interaction == "Visit House"
         visit_house(user_instance)
+    elsif interaction == "Visited Houses"
+        all_houses_visited(user_instance)
     elsif interaction == "Delete Buyer"
         delete_buyer(user_instance)
+    elsif interaction == "Log Out"
+        open_app
     elsif interaction == "Exit"
         puts "Have a nice day!"
     else
@@ -78,25 +82,37 @@ end
 
 def help(user_instance)
     puts "\nHere are the commands you can enter"
-    puts "Visit House"
-    puts "Houses Seen"
     puts "List Available Houses"
+    puts "Agent"
     puts "Change Budget"
+    puts "Buy House"
+    puts "Visit House"
+    puts "Visited Houses"
+    puts "Delete Buyer"
+    puts "Help"
+    puts "Log Out"
+    puts "Exit"
     interactions(user_instance)
 end
 
 def visit_house(user_instance)
     puts "\nWhat house would you like to visit"
     house_id = gets.strip
-    house_visit = HouseVisit.new({house_id: house_id, buyer_id: user_instance.id})
-    house_visit.save
+    if House.find_by(id: house_id)
+        house_visit = HouseVisit.new({house_id: house_id, buyer_id: user_instance.id})
+        house_visit.save
 
-    puts "This house costs $#{house_visit.house.price}."
-    interactions(user_instance)
+        puts "This house costs $#{house_visit.house.price}."
+        interactions(user_instance)
+    else
+        puts "I'm sorry the house ID that you entered is not in our system."
+        puts "Please try again."
+        visit_house(user_instance)
+    end
 end
 
 def list_houses(user_instance)
-    puts House.all
+    House.all.each {|house| puts "House ID: #{house.id}, House Price: #{house.price}, House Agent: #{house.agent.name}"}
     interactions(user_instance)
 end
 
@@ -120,7 +136,14 @@ end
 
 def all_houses_visited(user_instance)
     visited_houses = user_instance.houses
-    interactions(user_instance)
+    if visited_houses
+        puts "You have visited:"
+        visited_houses.each {|house_seen| puts "House ID: #{house_seen.id}, House Price: #{house_seen.price}"}
+        interactions(user_instance)
+    else
+        puts "You have not visited any houses."
+        interactions(user_instance)
+    end
 end
 
 def delete_buyer(user_instance)
