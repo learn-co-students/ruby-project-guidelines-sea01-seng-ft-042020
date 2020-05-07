@@ -27,6 +27,8 @@ def interactions(user_instance)
     if interaction == "List Available Houses"
         list_houses(user_instance)
     elsif interaction == "Agent"
+        choose_agent(user_instance, interaction)
+    elsif interaction == "Switch Agent"
         agents(user_instance)
     elsif interaction == "Help"
         help(user_instance)
@@ -58,6 +60,8 @@ def agents(user_instance)
 
     puts "Visting house list:"
     agent_list_houses(agent_name)
+
+    visit_house(user_instance)
 end
 
 def houses(budget)
@@ -72,8 +76,20 @@ end
 
 def agent_list_houses(agent_name)
     house = House.all.select {|house| house.agent.name == agent_name}
-    house.each {|house| puts "house"}
-    #binding.pry
+    house.each {|house| puts "House ID: #{house.id}, House price: #{house.price}, Agent name: #{house.agent.name} "}
+end
+
+def choose_agent(user_instance, interaction)
+    if user_instance.houses.agent.values.include?(nil)
+        agents(user_instance)
+    else
+        puts "You already have an agent! Do you want to switch one?"
+        if interaction == "No"
+            interactions(user_instance)
+        elsif interaction == "Switch"
+            agents(user_instance)
+        end
+    end
 end
 
 def help(user_instance)
