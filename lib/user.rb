@@ -14,6 +14,7 @@ def open_app
             interactions(user_instance)
         end
     elsif user_input == "Exit"
+        puts "Have a nice day!"
     else
         puts "Please say 'Log In' or 'Create User' or 'Exit'"
         open_app
@@ -24,7 +25,7 @@ def interactions(user_instance)
     puts "\nIf you have any questions type Help."
     puts "What would you like to do?"
     interaction = gets.strip
-    if interaction == "List Available Houses"
+    if interaction == "List All Houses"
         list_houses(user_instance)
     elsif interaction == "Agent"
         choose_agent(user_instance)
@@ -62,7 +63,7 @@ def list_agents(user_instance)
     agent = valid_agent_name(user_instance, agents)
 
     puts "Visting house list:"
-    agent = agent_list_houses(agent.name)
+    agent_list_houses(agent)
 
     visit_house(user_instance, agent)
 end
@@ -70,7 +71,6 @@ end
 def valid_agent_name(user_instance, agents)
     agent_name = gets.strip
     if agents.select {|agent| agent.name == agent_name}[0]
-        binding.pry
         HouseVisit.where("buyer_id = #{user_instance.id}").each {|housevisit| housevisit.delete}
         return Agent.find_by(name: agent_name)
     else
@@ -145,7 +145,7 @@ end
 
 def help(user_instance)
     puts "\nHere are the commands you can enter"
-    puts "List Available Houses: List all Houses on the market"
+    puts "List All Houses: List all Houses on the market"
     puts "Agent: To choose or Switch your Agent"
     puts "Agents Houses: List your agents houses"
     puts "Change Budget"
@@ -167,16 +167,34 @@ def visit_house(user_instance, agent = nil)
         if house_id == "Exit" or house_id.to_i > 0
             if house_id == "Exit"
                 interactions(user_instance)
-            elsif House.find_by(id: house_id).agent == agent or user_instance.houses[0].agent == House.find_by(id: house_id).agent
+            elsif House.find_by(id: house_id)
+                if House.find_by(id: house_id).agent == agent
                 house_visit = HouseVisit.new({house_id: house_id, buyer_id: user_instance.id})
                 house_visit.save
 
                 puts "This house costs $#{house_visit.house.price}."
                 interactions(user_instance)
+                else
+                    puts "I'm sorry the house ID that you entered is not under your agent."
+                    puts "Please try again."
+                    visit_house(user_instance, agent)
+                end
+            elsif user_instance.houses[0]
+                if House.find_by(id: house_id).agent == user_instance.houses[0].agent
+                    house_visit = HouseVisit.new({house_id: house_id, buyer_id: user_instance.id})
+                    house_visit.save
+
+                    puts "This house costs $#{house_visit.house.price}."
+                    interactions(user_instance)
+                else
+                    puts "I'm sorry the house ID that you entered is not under your agent."
+                    puts "Please try again."
+                    visit_house(user_instance, agent)
+                end
             else
                 puts "I'm sorry the house ID that you entered is not under your agent."
                 puts "Please try again."
-                visit_house(user_instance)
+                visit_house(user_instance, agent)
             end
         else
             puts "Please input an ID or 'Exit'"
@@ -262,6 +280,12 @@ def valid?(username)
     else
         false
     end
+end
+
+def list_houses(user_instance)
+    house = House.all
+    house.each {|house| puts "House ID: #{house.id}, House price: #{house.price}, Agent name: #{house.agent.name} "}
+    interactions(user_instance)
 end
 
 # created at the begining when user info is given
