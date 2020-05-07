@@ -139,7 +139,6 @@ def buy_house(user_instance)
     puts "\nWhich house would you like to buy?"
     house_id = gets.strip
     house = House.find_by(id: house_id)
-    binding.pry
     if house
         puts "We hope that you enjoy your lovely new home."
         if HouseVisit.find_by(house_id: house_id.to_i)
@@ -149,7 +148,13 @@ def buy_house(user_instance)
         interactions(user_instance)
     else
         puts "Sorry we could not find this house."
-        buy_house(user_instance)
+        puts "Would you like to buy a different house? (Y/N)"
+        answer = gets.strip
+        if anser == "Y"
+            buy_house(user_instance)
+        else
+            interactions(user_instance)
+        end
     end
 end
 
