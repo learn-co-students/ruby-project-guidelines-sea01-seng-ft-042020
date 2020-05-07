@@ -16,101 +16,60 @@ def account_prompt(cli)
 end
 
 #Gives user list of options
-def user_options(cli)
+def main_menu(cli)
     cli.space 
-    cli.list_user_options
+    cli.main_menu_options
     user_input = gets.chomp.to_i
 
     case user_input
-        when 1
-        #option1 - movies
-        #Prompts user to find movie in database
-        cli.space
-        puts "What movie are you looking for?"
-        user_input = gets.strip
-        cli.movie = cli.find_movie(user_input)
-        #output movie info: title, desc
-        puts cli.movie[:title]
-        #give option to write/read review, or go back to user_options
-        puts "\n"
-        puts "Please select from the following"
-        puts "\n"
-        puts "1. Write a review"
-        puts "\n"
-        puts "2. Read reviews"
-        puts "\n"
-        puts "3. Return to main menu"
-        puts "\n"
-        user_input = gets.chomp.to_i
+        when 1 #Movie Menu
+            #Prompts user to find movie in database
+            cli.space
+            puts "What movie are you looking for?"
+            user_input = gets.strip
+            cli.movie = cli.find_movie(user_input)
+
+            #output movie info: title, desc
+            puts cli.movie[:title]
+
+            #give option to write/read review, or go back to main_menu
+            cli.movie_options
+            user_input = gets.chomp.to_i
+
             case user_input
-                when 1
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
-                    puts "Write your review:"
-                    write_up = gets.chomp
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
-                    puts "Now rate this movie from 1 to 5:"
-                    rating = gets.chomp.to_i.clamp(1, 5)
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
-                    cli.write_review(write_up, rating)
-                    user_options(cli)
-                when 2
-                    puts cli.read_reviews
-                    user_options(cli)
-                when 3
-                    user_options(cli)
-                end
+                when 1 #write new review 
+                    cli.movie_menu_write_review(cli)
+                when 2 #read reviews 
+                    puts cli.movie_menu_read_reviews
+                    main_menu(cli)
+                when 3 #exit to main menu
+                    main_menu(cli)
+            end
         when 2
-            #option 2 - user settings
+            #option 2 - User Settings Menu
             #update/delete account -or- logout, should send back to user account prompt
-            puts "\n"
-            puts "\n"
-            puts "\n"
-            puts "Please select from the following"
-            puts "\n"
-            puts "1. Update account"
-            puts "\n"
-            puts "2. Delete account"
-            puts "\n"
-            puts "3. Update a review"
-            puts "\n"
-            puts "4. Delete a review"
-            puts "\n"
-            puts "5. Return to main menu"
-            puts "\n"
+            cli.space
+            cli.user_settings_options
             user_input = gets.chomp.to_i
             case user_input
                 when 1 #update account
                     cli.update_account(cli.user.name)
-                    user_options(cli)
+                    main_menu(cli)
                 when 2 #delete account
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
+                    cli.space
                     user = User.find_user(cli.user.name)
                     # binding.pry
                     user.destroy
                     puts "Account successfully deleted! Goodbye!"
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
+                    cli.space
                     
                 when 3 #update review
                     #finds a users reviews
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
+                    cli.space
                     puts "Please select a review:"
                     puts "\n"
                     reviews = cli.user.find_reviews
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
+                    cli.space
 
                     #prompts user to pick one of their reviews
                     user_input = gets.chomp.to_i
@@ -124,30 +83,22 @@ def user_options(cli)
                     puts "Now rate this movie from 1 to 5:"
                     rating = gets.chomp.to_i.clamp(1, 5)
                     Review.update_review(selected_review, rating, write_up)
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
+                    cli.space
                     puts "Here's your updated review!"
                     puts "\n"
                     puts "#{selected_review.movie.title} --- #{rating} --- #{write_up}"
-                    user_options(cli)
+                    main_menu(cli)
 
                 when 4 #delete a review
                     #finds a users reviews
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
+                    cli.space
                     reviews = cli.user.find_reviews
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
+                    cli.space
 
                     #prompts user to pick one of their reviews
                     puts "Please select a review"
                     user_input = gets.chomp.to_i
-                    puts "\n"
-                    puts "\n"
-                    puts "\n"
+                    cli.space
 
                     #stores selected review in a var
                     selected_review = reviews[(user_input)-1]
@@ -156,25 +107,20 @@ def user_options(cli)
                     selected_review.destroy
                     puts "You have deleted your review!"
 
-                    user_options(cli)
-                when 5 
-                    #return to main menu
-                    user_options(cli)
+                    main_menu(cli)
+                when 5 #return to main menu
+                    
+                    main_menu(cli)
             end
 
-        when 3
-            #exit user_options function/program
-            puts "\n"
-            puts "\n"
-            puts "\n"
+        when 3 #exit main_menu function/program
+            cli.space
             puts "Thanks for using MovieBook! Goodbye!"
-            puts "\n"
-            puts "\n"
-            puts "\n"
+            cli.space
     end
 end
 
 account_prompt(cli)
-user_options(cli)
+main_menu(cli)
 
 # binding.pry

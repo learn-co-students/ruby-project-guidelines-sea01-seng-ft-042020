@@ -7,7 +7,6 @@ class Movie < ActiveRecord::Base
     def self.search_movie_database(keyword)
     # requesting array from api using 'keyword'(user input) as the search query
         search_results = Tmdb.get_data(keyword).uniq
-        binding.pry
         unless search_results == []
         # formatting search_results into numbered list for user
             search_list = search_results.map do |result|

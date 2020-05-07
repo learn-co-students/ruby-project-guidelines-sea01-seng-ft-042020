@@ -1,20 +1,24 @@
 class CommandLineInterface
     attr_accessor :user, :movie
+    
     def initialize
-
     end
 
+    def space
+        puts "\n"
+        puts "\n"
+        puts "\n"
+    end
+
+    # Greets the user upon opening MovieBook
     def greet
-        puts "\n"
-        puts "\n"
-        puts "\n"
-        puts "***********************************"
+        self.space
+        puts "*********************"
         puts 'Welcome to MovieBook!'
-        puts "***********************************"
-        puts "\n"
-        puts "\n"
-        puts "\n"
+        puts "*********************"
+        self.space
     end
+
 
     def user_account(answer)
         # self.find_or_create_user_account(answer)
@@ -25,11 +29,7 @@ class CommandLineInterface
         Movie.search_movie_database(answer)
     end
 
-    def review_prompt
-        puts "Would you like to read a review or write a new review?"
-        puts "1. Write"
-        puts "2. Read" 
-    end
+   
 
     def write_review(write_up, rating)
         review = Review.create(user_id: @user[:id], movie_id: @movie[:id], write_up: write_up, rating: rating)
@@ -37,10 +37,8 @@ class CommandLineInterface
         @user.reviews << review
     end
 
-    def read_reviews
-        puts "\n"
-        puts "\n"
-        puts "\n"
+    def movie_menu_read_reviews
+        self.space
         puts @movie[:title]
         puts "\n"
         Review.where(movie_id: @movie[:id]).map do |review|
@@ -48,12 +46,25 @@ class CommandLineInterface
         end
     end
 
-    def update_review(review, rating, write_up)
-        review.update(rating: rating, write_up: write_up)
+
+
+
+    def movie_menu_write_review(cli)
+        cli.space
+        puts "Write your review:"
+        write_up = gets.chomp
+        cli.space
+        puts "Now rate this movie from 1 to 5:"
+        rating = gets.chomp.to_i.clamp(1, 5)
+        cli.space
+        cli.write_review(write_up, rating)
+        main_menu(cli)
     end
 
- 
-    def list_user_options
+   
+
+    #options prompts
+    def main_menu_options
         puts "Please select from the following"
         puts "\n"
         puts "1. Movies: info, reviews"
@@ -63,33 +74,53 @@ class CommandLineInterface
         puts "3. Exit"
         puts "\n"
     end
+
+    def movie_options
+        puts "\n"
+        puts "Please select from the following"
+        puts "\n"
+        puts "1. Write a review"
+        puts "\n"
+        puts "2. Read reviews"
+        puts "\n"
+        puts "3. Return to main menu"
+        puts "\n"
+    end
+
+    def user_settings_options
+        puts "Please select from the following"
+        puts "\n"
+        puts "1. Update account"
+        puts "\n"
+        puts "2. Delete account"
+        puts "\n"
+        puts "3. Update a review"
+        puts "\n"
+        puts "4. Delete a review"
+        puts "\n"
+        puts "5. Return to main menu"
+        puts "\n"
+    end
+
     
     def update_account(user_name)
         #Finds current instance of user
         user = User.find_user(user_name)
-        puts "\n"
-        puts "\n"
-        puts "\n"
+        self.space
         #prompts user for new name and stores in variable
         puts "Enter your new name:"
         user_input = gets.strip
 
         #puts in new name and stores in current user instance
         User.change_name(user, user_input)
-        puts "\n"
-        puts "\n"
-        puts "\n"
+        self.space
 
         #tells user name change successful
         puts "Your name has been changed to: #{user_input}"
     end
 
 
-    def space
-        puts "\n"
-        puts "\n"
-        puts "\n"
-    end
+ 
 
 
 
@@ -97,59 +128,6 @@ class CommandLineInterface
 
 
 
-
-
-
-
-
-
-    # output the movie the user has searched for
-    
-    # # CREATE
-    # create user account
-    def find_or_create_user_account(name)
-        User.find_or_create_by(name: name)
-    end
-    # create review/leave rating connected to user instance and movie instance
-    def create_review(rating, write_up)
-        Review.create(rating: rating, write_up: write_up)
-    end
-    
-    # # READ
-    # find a movie
-    def search_movie_database(keyword)
-    # requesting array from api using 'keyword'(user input) as the search query
-        search_results = Tmdb.get_data(keyword).uniq
-
-    # formatting search_results into numbered list for user
-        search_list = search_results.map do |result|
-        "#{(search_results.index(result)) + 1}. #{result[:title]}"
-        end
-        puts search_list
-        puts "See anything you like? Input the number of the movie you want to view."
-        user_input = gets.strip
-        movie_choice = search_results[(user_input)-1]
-        Movie.find_or_create_by(title: movie_choice[:title])
-    end
-
-    # def create_movie_in_our_database(movie)
-    #     movie_object = Tmdb.get_data(movie).uniq
-    #     Movie.create(movie_object)
-        
-    # end
-
-    # find other reviews
-    def find_reviews_by_movie(movie)
-        Review.where(movie_id: movie.id)
-    end
-    
-    # # UPDATE
-    # update user review 
-    # update user name
-
-    # # DESTROY
-    # delete account
-    # delete review
 
 
 
