@@ -8,9 +8,11 @@ system("clear")
 
 #Welcomes user to MovieBook
 cli.greet
-
+sleep(3)
+system("clear")
 #User account prompt - prompts user to find or create their account
 def account_prompt(cli)
+    cli.greet_2
     puts "Enter your name to find your account or create a new one!"
     user_input = gets.strip
     if user_input == ""
@@ -56,6 +58,15 @@ def main_menu(cli)
                     system("clear")
                     cli.delete_account(cli)
                     cli.space
+                    cli.delete_account_prompt
+                    user_input = gets.chomp.to_i
+                    case user_input #Stay or leave MovieBook
+                    when 1 #exit MovieBook
+                        cli.goodbye_message
+                    when 2 #start from find or create user account
+                        system("clear")
+                        application(cli)
+                    end
                 when 3 #update review
                     system("clear")
                     cli.update_review(cli)
@@ -71,9 +82,7 @@ def main_menu(cli)
             end
 
         when 3 #Exit
-            system("clear")
-            puts "Thanks for using MovieBook! Goodbye!"
-            cli.space
+            cli.goodbye_message
         else
             system("clear")
             puts "Sorry, that isn't one of our options. Please select 1, 2, or 3."
@@ -82,8 +91,11 @@ def main_menu(cli)
         end
 end
 
-account_prompt(cli)
+def application(cli)
+    account_prompt(cli)
+    system("clear")
+    main_menu(cli)
+end
+application(cli)
 system("clear")
-main_menu(cli)
-
 # binding.pry

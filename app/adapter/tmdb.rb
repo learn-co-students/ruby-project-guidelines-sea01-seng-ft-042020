@@ -9,7 +9,7 @@ class Tmdb
         response_body = response.body
         json_response = JSON.parse(response_body)
         movies = json_response["results"].map do |movie|
-            {title: movie["title"]}
+            {title: movie["title"], description: movie["overview"], release_date: movie["release_date"]}
         end
         # binding.pry
     end

@@ -19,11 +19,32 @@ class Movie < ActiveRecord::Base
             puts "\n"
             puts "\n"
             puts "\n"
-            puts "See anything you like? Input the number of the movie you want to view."
-            user_input = gets.chomp.to_i.clamp(0, 30)
-            # binding.pry
+            puts "Please enter the number for your corresponding selection:"
+            puts "\n"
+            puts "Options: 1 - #{search_results.count}"
+            user_input = gets.chomp.to_i
+            while user_input.class != Integer
+                system("clear")
+                puts search_list
+                puts "\n"
+                puts "Please enter the number for your corresponding selection:"
+                puts "\n"
+                puts "Options: 1 - #{search_results.count}"
+                puts "\n"
+                user_input = gets.chomp.to_i
+            end
+            while user_input < 1 || user_input > search_results.size
+                system("clear")
+                puts search_list
+                puts "\n"
+                puts "Please enter the number for your corresponding selection"
+                puts "\n"
+                puts "Options: 1 - #{search_results.count}"
+                puts "\n"
+                user_input = gets.chomp.to_i
+            end
             movie_choice = search_results[(user_input)-1]
-            movie = Movie.find_or_create_by(title: movie_choice[:title])
+            movie = Movie.find_or_create_by(title: movie_choice[:title], description: movie_choice[:description], release_date: movie_choice[:release_date])
             puts "\n"
             puts "\n"
             puts "\n"
@@ -31,6 +52,12 @@ class Movie < ActiveRecord::Base
         else
             return
         end
+    end
+
+    def average_rating
+        reviews = Review.where(movie_id: self.id)
+        review_ratings = reviews.map {|review| review.rating}
+        average_rating = (review_ratings.reduce {|acc, ele| acc + ele}).to_f / reviews.size
     end
 
 end

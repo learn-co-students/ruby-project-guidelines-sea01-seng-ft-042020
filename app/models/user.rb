@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
 
     def self.change_name(user, new_name)
         user.update(name: new_name)
+        user.save
     end
 
 end
