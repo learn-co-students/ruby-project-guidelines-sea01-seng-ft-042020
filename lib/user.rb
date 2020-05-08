@@ -265,6 +265,7 @@ end
 
 def change_budget(user_instance)
     puts "\nWhat would you like to change your budget to?"
+    puts "Your current budget is #{user_instance.budget}."
     budget = gets.strip
     if budget.to_f >= House.all.map {|house| house.price}.min
         user_instance.budget = budget.to_f
@@ -280,7 +281,7 @@ def change_budget(user_instance)
 end
 
 def valid?(username)
-    bad_usernames = ["open_app", "create_buyer", "visit_house", "list_houses", "buy_house", "delete_buyer"]
+    bad_usernames = ["open_app", "create_buyer", "visit_house", "list_houses", "buy_house", "delete_buyer", "Exit", "Create User", "Log In"]
     if bad_usernames.include?(username) or Buyer.find_by(name: username)
         puts "Please enter a different username."
         true
@@ -328,6 +329,7 @@ def login
     elsif user_name == "Create User"
         create_buyer
     elsif user_name == "Exit"
+        puts "Have a nice day!"
     else
         puts "Sorry we could not find this account."
         puts "If you dont know your username then type 'Create User' or 'Exit'"

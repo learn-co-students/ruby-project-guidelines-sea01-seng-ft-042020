@@ -1,59 +1,59 @@
-# Module One Final Project Guidelines
+# Find Your House
 
-Congratulations, you're at the end of module one! You've worked crazy hard to get here and have learned a ton.
+Find Your House is a Command Line App that allows a Buyer to Purchase a house. Finding a house can be confusing
+there are so many different options and to many things to look at. That is where an Agent comes in handy
+our goal was to make the experience of finding an Agent easy. Once you have an agent they can do the hard part
+of sifting through all the houses you wouldn't want. This way you can find the house of your dreams without 
+having to deal with the inconvenient parts.
 
-For your final project, we'll be building a Command Line database application.
+## Getting Started
 
-## Project Requirements
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### Option One - Data Analytics Project
+### Prerequisites
 
-1. Access a Sqlite3 Database using ActiveRecord.
-2. You should have at minimum three models including one join model. This means you must have a many-to-many relationship.
-3. You should seed your database using data that you collect either from a CSV, a website by scraping, or an API.
-4. Your models should have methods that answer interesting questions about the data. For example, if you've collected info about movie reviews, what is the most popular movie? What movie has the most reviews?
-5. You should provide a CLI to display the return values of your interesting methods.  
-6. Use good OO design patterns. You should have separate classes for your models and CLI interface.
+To run this app you will need Ruby version 2.7.1. Can be found at https://www.ruby-lang.org/en/downloads/
 
-  **Resource:** [Easy Access APIs](https://github.com/learn-co-curriculum/easy-access-apis)
+### Installing
 
-### Option Two - Command Line CRUD App
+Once you have pulled the repository from Git Hub, please follow these steps:
 
-1. Access a Sqlite3 Database using ActiveRecord.
-2. You should have a minimum of three models.
-3. You should build out a CLI to give your user full CRUD ability for at least one of your resources. For example, build out a command line To-Do list. A user should be able to create a new to-do, see all todos, update a todo item, and delete a todo. Todos can be grouped into categories, so that a to-do has many categories and categories have many to-dos.
-4. Use good OO design patterns. You should have separate classes for your models and CLI interface.
+1) In you terminal go to the repository
+2) In your terminal type 'bundle install' to download all nessecary gems
+3) In your terminal type 'rake db:migrate' to set up your database
+4) In your terminal type 'rake db:seed' to create data in your database
+5) You can now run the run.rb file to test code
 
-### Brainstorming and Proposing a Project Idea
+### Interactions
 
-Projects need to be approved prior to launching into them, so take some time to brainstorm project options that will fulfill the requirements above.  You must have a minimum of four [user stories](https://en.wikipedia.org/wiki/User_story) to help explain how a user will interact with your app.  A user story should follow the general structure of `"As a <role>, I want <goal/desire> so that <benefit>"`. In example, if we were creating an app to randomly choose nearby restaurants on Yelp, we might write:
+- Log In: This allows the user to sign into an already created buyer
+- Create User: This allows the user to create a new buyer on the system
+- Help: Lists all interactions the user can do on the system
+- List All Houses: List all Houses that are in the database
+- Agent: To choose or Switch your Agent. You need an agent to buy a house
+- Agents Houses: List all the houses your agents has in their portfolio
+- Change Budget: Allows the user to change what there budget is
+- Buy House: Allows the user to buy the house they want and take it off the market
+- Visit House: Allows the user to set up a tour of the house. Needed to buy a house
+- Visited Houses: All Houses the buyer has visited
+- Delete Buyer: Delete account
+- Log Out: Allows you to switch accounts
+- Exit: Leave the app
 
-* As a user, I want to be able to enter my name to retrieve my records
-* As a user, I want to enter a location and be given a random nearby restaurant suggestion
-* As a user, I should be able to reject a suggestion and not see that restaurant suggestion again
-* As a user, I want to be able to save to and retrieve a list of favorite restaurant suggestions
+### Authors
 
-## Instructions
+- Aidan Muller-Cohn
+- Qiuyan (Nicole) Peng 
 
-1. Fork and clone this repository.
-2. Build your application. Make sure to commit early and commit often. Commit messages should be meaningful (clearly describe what you're doing in the commit) and accurate (there should be nothing in the commit that doesn't match the description in the commit message). Good rule of thumb is to commit every 3-7 mins of actual coding time. Most of your commits should have under 15 lines of code and a 2 line commit is perfectly acceptable.
-3. Make sure to create a good README.md with a short description, install instructions, a contributors guide and a link to the license for your code.
-4. Make sure your project checks off each of the above requirements.
-5. Prepare a video demo (narration helps!) describing how a user would interact with your working project.
-    * The video should:
-      - Have an overview of your project.(2 minutes max)
-6. Prepare a presentation to follow your video.(3 minutes max)
-    * Your presentation should:
-      - Describe something you struggled to build, and show us how you ultimately implemented it in your code.
-      - Discuss 3 things you learned in the process of working on this project.
-      - Address, if anything, what you would change or add to what you have today?
-      - Present any code you would like to highlight.   
-7. *OPTIONAL, BUT RECOMMENDED*: Write a blog post about the project and process.
+### Questions
 
----
-### Common Questions:
-- How do I turn off my SQL logger?
-```ruby
-# in config/environment.rb add this line:
-ActiveRecord::Base.logger = nil
-```
+- Can you buy a house above your budget?
+  Yes, however the house must still have the same agent as you and you must have visited the house.
+- What happened to my house visits?
+  If you switch agents it will delete all previous house visits
+- Why dont I have a house after switching agents?
+  If you left the app before visiting a house then it wont link the agent to you.
+
+### License
+
+This code is free to use under the terms of the Flatiron License.
