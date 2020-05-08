@@ -85,7 +85,7 @@ def main_menu(cli)
             cli.goodbye_message
         else
             system("clear")
-            puts "Sorry, that isn't one of our options. Please select 1, 2, or 3."
+            puts "Sorry, that isn't one of our options. Please select 1, 2, or 3"
             cli.space
             main_menu(cli)
         end

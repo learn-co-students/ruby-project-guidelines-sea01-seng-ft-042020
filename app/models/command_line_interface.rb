@@ -179,7 +179,6 @@ class CommandLineInterface
 
         def delete_account(cli)
             user = User.find_user(cli.user.name)
-            binding.pry
             user.destroy
             puts "Account successfully deleted!"
             self.space
