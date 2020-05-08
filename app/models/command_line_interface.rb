@@ -104,18 +104,6 @@ class CommandLineInterface
             @user.reviews << review
         end
 
-        def movie_menu_read_reviews
-            self.space
-            puts @movie[:title]
-            puts "\n"
-            puts "Average Rating: #{@movie.average_rating}"
-            reviews = Review.where(movie_id: @movie[:id])
-            reviews.map do |review|
-                puts "#{review[:rating]} --- #{review[:write_up]}"
-            end
-
-        end
-
         def movie_menu_write_review(cli)
             puts "Write your review:"
             write_up = gets.chomp
@@ -142,6 +130,23 @@ class CommandLineInterface
             cli.write_review(write_up, rating)
             main_menu(cli)
         end
+
+        def movie_menu_read_reviews
+            self.space
+            reviews = Review.where(movie_id: @movie[:id])
+            if reviews == []
+                puts "Sorry, looks like this one hasn't been reviewed yet"
+            else
+                puts @movie[:title]
+                puts "\n"
+                puts "Average Rating: #{@movie.average_rating}"
+                puts "\n"
+                reviews.map do |review|
+                    puts "#{review[:rating]} --- #{review[:write_up]}"
+                end
+            end
+        end
+
     
     
         
