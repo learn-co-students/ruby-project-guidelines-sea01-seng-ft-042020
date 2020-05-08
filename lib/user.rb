@@ -61,6 +61,7 @@ def list_agents(user_instance)
 
     puts "Which agent do you want to choose?"
     agent = valid_agent_name(user_instance, agents)
+    user_instance = Buyer.find_by(id: user_instance.id)
 
     puts "Visting house list:"
     agent_list_houses(agent)
@@ -111,7 +112,7 @@ def list_houses_agent(user_instance)
 end
 
 def agent_list_houses_helper(user_instance)
-    if user_instance.houses[0].agent
+    if user_instance.houses[0]
         agent_list_houses(user_instance.houses[0].agent)
     else
         puts "You currently do not have an angent"
@@ -149,7 +150,7 @@ def help(user_instance)
     puts "Agent: To choose or Switch your Agent"
     puts "Agents Houses: List your agents houses"
     puts "Change Budget"
-    puts "Buy House"
+    puts "Buy House: You must visit the house first"
     puts "Visit House"
     puts "Visited Houses: All Houses you have visited"
     puts "Delete Buyer: Delete account"
@@ -167,10 +168,11 @@ def visit_house(user_instance, agent = nil)
         if house_id == "Exit" or house_id.to_i > 0
             if house_id == "Exit"
                 interactions(user_instance)
-            elsif House.find_by(id: house_id)
+            elsif House.find_by(id: house_id) and agent
                 if House.find_by(id: house_id).agent == agent
                 house_visit = HouseVisit.new({house_id: house_id, buyer_id: user_instance.id})
                 house_visit.save
+                user_instance = Buyer.find_by(id: user_instance.id)
 
                 puts "This house costs $#{house_visit.house.price}."
                 interactions(user_instance)
@@ -179,10 +181,11 @@ def visit_house(user_instance, agent = nil)
                     puts "Please try again."
                     visit_house(user_instance, agent)
                 end
-            elsif user_instance.houses[0]
+            elsif House.find_by(id: house_id) and user_instance.houses[0]
                 if House.find_by(id: house_id).agent == user_instance.houses[0].agent
                     house_visit = HouseVisit.new({house_id: house_id, buyer_id: user_instance.id})
                     house_visit.save
+                    user_instance = Buyer.find_by(id: user_instance.id)
 
                     puts "This house costs $#{house_visit.house.price}."
                     interactions(user_instance)
@@ -210,18 +213,19 @@ def buy_house(user_instance)
     puts "\nWhich house would you like to buy?"
     house_id = gets.strip
     house = House.find_by(id: house_id)
-    if house
+    if HouseVisit.where("house_id = #{house_id}").where("buyer_id = #{user_instance.id}")[0]
         puts "We hope that you enjoy your lovely new home."
         if HouseVisit.find_by(house_id: house_id.to_i)
             HouseVisit.find_by(house_id: house_id.to_i).delete
         end
         house.delete
+        user_instance = Buyer.find_by(id: user_instance.id)
         interactions(user_instance)
     else
-        puts "Sorry we could not find this house."
+        puts "Sorry this house in your records."
         puts "Would you like to buy a different house? (Y/N)"
         answer = gets.strip
-        if anser == "Y"
+        if answer == "Y"
             buy_house(user_instance)
         else
             interactions(user_instance)
@@ -231,7 +235,7 @@ end
 
 def all_houses_visited(user_instance)
     visited_houses = user_instance.houses
-    if visited_houses
+    if visited_houses[0]
         puts "You have visited:"
         visited_houses.each {|house_seen| puts "House ID: #{house_seen.id}, House Price: #{house_seen.price}"}
         interactions(user_instance)
@@ -246,7 +250,9 @@ def delete_buyer(user_instance)
     answer = gets.strip
     if answer == "Y"
         puts "\nWe are sad to see you go. We hope you use next time for all you home purchasing needs."
-        user_instance.visithouses.delete_all
+        if user_instance.house_visits[0]
+            user_instance.house_visits.delete_all
+        end
         user_instance.delete
         open_app
     elsif answer == "N"
@@ -263,6 +269,7 @@ def change_budget(user_instance)
     if budget.to_f >= House.all.map {|house| house.price}.min
         user_instance.budget = budget.to_f
         user_instance.save
+        user_instance = Buyer.find_by(id: user_instance.id)
         interactions(user_instance)
     else
         puts "Your budget is to low for this market."
